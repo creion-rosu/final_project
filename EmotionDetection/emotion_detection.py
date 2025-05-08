@@ -17,17 +17,29 @@ def emotion_detector(text_to_analyse):
     # Parse the response from the API
     formatted_response = json.loads(response.text)
 
-    # Save the score of mentioned emotions
-    anger_score = formatted_response['emotionPredictions'][0]['emotion']['anger']
-    disgust_score = formatted_response['emotionPredictions'][0]['emotion']['disgust']
-    fear_score = formatted_response['emotionPredictions'][0]['emotion']['fear']
-    joy_score = formatted_response['emotionPredictions'][0]['emotion']['joy']
-    sadness_score = formatted_response['emotionPredictions'][0]['emotion']['sadness']
+    # If the response status code is 200, extract the score of each emotion
+    if response.status_code == 200:
+        # Save the scores of mentioned emotions
+        anger_score = formatted_response['emotionPredictions'][0]['emotion']['anger']
+        disgust_score = formatted_response['emotionPredictions'][0]['emotion']['disgust']
+        fear_score = formatted_response['emotionPredictions'][0]['emotion']['fear']
+        joy_score = formatted_response['emotionPredictions'][0]['emotion']['joy']
+        sadness_score = formatted_response['emotionPredictions'][0]['emotion']['sadness']
 
-    # Find the name of the emotion with the highest score
-    for key, val in formatted_response['emotionPredictions'][0]['emotion'].items():
-        if val == max(formatted_response['emotionPredictions'][0]['emotion'].values()):
-            dominant_emotion_name = key 
+        # Find the name of the emotion with the highest score
+        for key, val in formatted_response['emotionPredictions'][0]['emotion'].items():
+            if val == max(formatted_response['emotionPredictions'][0]['emotion'].values()):
+                dominant_emotion_name = key
+
+    # If the response status code is 500, set label and score to None
+    elif (response.status_code == 500) or (response.status_code == 400):
+        # Save the scores of mentioned emotions as 'None'
+        anger_score = None
+        disgust_score = None
+        fear_score = None
+        joy_score = None
+        sadness_score = None
+        dominant_emotion_name = None
 
     return {
         'anger': anger_score,

@@ -23,10 +23,15 @@ def emotion_analyzer():
     # Get the dominant emotion value
     dominant_emotion = response["dominant_emotion"]
 
-    # Remove the dominant emotion key
-    response.pop("dominant_emotion")
+    # Check if the label is None, indicating an error or invalid input
+    if dominant_emotion is None:
+        return "Invalid text! Please try again!."
+    else:
+        # Remove the dominant emotion key
+        response.pop("dominant_emotion")
 
-    return f"For the given statement, the system response is {response}. The dominant emotion is {dominant_emotion}." 
+        # Return a formatted string
+        return f"For the given statement, the system response is {response}. The dominant emotion is {dominant_emotion}."
 
 @app.route("/")
 def render_index_page():
